@@ -7,6 +7,9 @@
 
 🛠️ A classe foi criada para ser utilizada em um projeto [Laravel](https://laravel.com/), porém, pode ser adaptada a qualquer projeto (lembre-se de ajustar a conversão de valores de acordo com as suas preferências). 
   
+
+<a href="https://www.buymeacoffee.com/mastria" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+  
   
 ## Manual Getnet
 
@@ -130,9 +133,11 @@
 ```
   
 
+## Contribuindo
+
+A classe ainda está em desenvolvimento, contribuições e melhorias são sempre bem-vindas!
+  
+
 ## Licença
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-  
-
-<a href="https://www.buymeacoffee.com/mastria" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
