@@ -78,6 +78,38 @@ class GetnetFileHelper
     }
 
     /**
+     * Conversor - Data
+     *
+     * @param String $data no formato ddmmaaaa
+     * @return String|null no formato aaaa-mm-dd ou null caso a data seja inválida
+     * @example formataData('01012023') retorna '2023-01-01'
+     */
+    public static function formataData(String $data): String|null
+    {
+        if (trim($data) == '' || intval($data) == 0 || strlen($data) != 8) {
+            return null;
+        }
+
+        return Carbon::createFromFormat('dmY', $data)->format('Y-m-d');
+    }
+
+    /**
+     * Conversor - Hora
+     * 
+     * @param String $hora no formato hhmmss
+     * @return String|null no formato hh:mm:ss ou null caso a hora seja inválida
+     * @example formataHora('120000') retorna '12:00:00'
+     */
+    public static function formataHora(String $hora): String|null
+    {
+        if (trim($hora) == '' || intval($hora) == 0 || strlen($hora) != 6) {
+            return null;
+        }
+
+        return Carbon::createFromFormat('His', $hora)->format('H:i:s');
+    }
+
+    /**
      * REGISTRO TIPO 0 - Header
      * 
      * Apresenta informação referente ao conteúdo do arquivo
@@ -89,9 +121,9 @@ class GetnetFileHelper
     {
         return [
             'TipoRegistro' => intval(substr($string, 0, 1)),
-            'DataCriacaoArquivo' => (intval(substr($string, 1, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 1, 8))->format('Y-m-d'),
-            'HoraCriacaoArquivo' => (intval(substr($string, 9, 6)) == 0) ? null : Carbon::createFromFormat('His', substr($string, 9, 6))->format('H:i:s'),
-            'DataReferenciaMovimento' => (intval(substr($string, 15, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 15, 8))->format('Y-m-d'),
+            'DataCriacaoArquivo' => self::formataData(substr($string, 1, 8)),
+            'HoraCriacaoArquivo' => self::formataHora(substr($string, 9, 6)),
+            'DataReferenciaMovimento' => self::formataData(substr($string, 15, 8)),
             'VersaoArquivo' => substr($string, 23, 8),
             'CodigoEstabelecimento' => trim(substr($string, 31, 15)),
             'CNPJAdquirente' => intval(substr($string, 46, 14)),
@@ -119,8 +151,8 @@ class GetnetFileHelper
             'CodigoProduto' => substr($string, 16, 2),
             'FormaCaptura' => substr($string, 18, 3),
             'NumeroRV' => intval(substr($string, 21, 9)),
-            'DataRV' => (intval(substr($string, 30, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 30, 8))->format('Y-m-d'),
-            'DataPagamentoRV' => (intval(substr($string, 38, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 38, 8))->format('Y-m-d'),
+            'DataRV' => self::formataData(substr($string, 30, 8)),
+            'DataPagamentoRV' => self::formataData(substr($string, 38, 8)),
             'Banco' => intval(substr($string, 46, 3)),
             'Agencia' => intval(substr($string, 49, 6)),
             'ContaCorrente' => substr($string, 55, 11),
@@ -138,7 +170,7 @@ class GetnetFileHelper
             'QuantidadesParcelasRV' => intval(substr($string, 172, 2)),
             'CodigoEstabelecimentoComercialCentralizadorPagamentos' => trim(substr($string, 174, 15)),
             'NumeroOperacaoAntecipacao' => intval(substr($string, 189, 15)),
-            'DataVencimentoOriginalRVAntecipado' => (intval(substr($string, 204, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 204, 8))->format('Y-m-d'),
+            'DataVencimentoOriginalRVAntecipado' => self::formataData(substr($string, 204, 8)),
             'CustoOperacao' => floatval(substr($string, 212, 12)) / 100,
             'ValorLiquidoRVAntecipado' => floatval(substr($string, 224, 12)) / 100,
             'NumeroControleOperacaoCobranca' => intval(substr($string, 236, 18)),
@@ -168,8 +200,8 @@ class GetnetFileHelper
             'CodigoEstabelecimento' => trim(substr($string, 1, 15)),
             'NumeroRv' => intval(substr($string, 16, 9)),
             'NSUAdquirente' => intval(substr($string, 25, 12)),
-            'DataTransacao' => (intval(substr($string, 37, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 37, 8))->format('Y-m-d'),
-            'HoraTransacao' => (intval(substr($string, 45, 6)) == 0) ? null : Carbon::createFromFormat('His', substr($string, 45, 6))->format('H:i:s'),
+            'DataTransacao' => self::formataData(substr($string, 37, 8)),
+            'HoraTransacao' => self::formataHora(substr($string, 45, 6)),
             'NumeroCartao' => trim(substr($string, 51, 19)),
             'ValorTransacao' => floatval(substr($string, 70, 12)) / 100,
             'ValorSaque' => floatval(substr($string, 82, 12)) / 100,
@@ -177,7 +209,7 @@ class GetnetFileHelper
             'NumeroTotalParcelas' => intval(substr($string, 106, 2)),
             'NumeroParcela' => intval(substr($string, 108, 2)),
             'ValorParcela' => floatval(substr($string, 110, 12)) / 100,
-            'DataPagamento' => (intval(substr($string, 122, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 122, 8))->format('Y-m-d'),
+            'DataPagamento' => self::formataData(substr($string, 122, 8)),
             'CodigoAutorizacao' => substr($string, 130, 10),
             'FormaCaptura' => substr($string, 140, 3),
             'StatusTransacao' => substr($string, 143, 1),
@@ -207,21 +239,21 @@ class GetnetFileHelper
             'TipoRegistro' => intval(substr($string, 0, 1)),
             'CodigoEstabelecimento' => substr($string, 1, 15),
             'NumeroRVAjustado' => substr($string, 16, 9),
-            'DataRV' => (intval(substr($string, 25, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 25, 8))->format('Y-m-d'),
-            'DataPagamentoRV' => (intval(substr($string, 33, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 33, 8))->format('Y-m-d'),
+            'DataRV' => self::formataData(substr($string, 25, 8)),
+            'DataPagamentoRV' => self::formataData(substr($string, 33, 8)),
             'IdentificadorAjuste' => substr($string, 41, 20),
             'Brancos' => substr($string, 61, 1),
             'SinalTransacao' => substr($string, 62, 1),
             'ValorAjuste' => floatval(substr($string, 63, 12)) / 100,
             'MotivoAjuste' => substr($string, 75, 2),
-            'DataCarta' => (intval(substr($string, 77, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 77, 8))->format('Y-m-d'),
+            'DataCarta' => self::formataData(substr($string, 77, 8)),
             'NumeroCartao' => substr($string, 85, 19),
             'NumeroRVOriginal' => intval(substr($string, 104, 9)),
             'NumeroCV' => intval(substr($string, 113, 12)),
-            'DataTransacaoOriginal' => (intval(substr($string, 125, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 125, 8))->format('Y-m-d'),
+            'DataTransacaoOriginal' => self::formataData(substr($string, 125, 8)),
             'IndicadorTipoPagamento' => self::indicadorTipoPagamento(substr($string, 133, 2)),
             'NumeroTerminal' => substr($string, 135, 8),
-            'DataPagamentoOriginal' => (intval(substr($string, 143, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 143, 8))->format('Y-m-d'),
+            'DataPagamentoOriginal' => self::formataData(substr($string, 143, 8)),
             'Moeda' => (substr($string, 151, 3) == '986') ? 'BRL' : 'USD',
             'ValorComissaoVenda' => floatval(substr($string, 154, 12)) / 100,
             'IdentificadorTipoProximoConteudo' => substr($string, 166, 2),
@@ -244,8 +276,8 @@ class GetnetFileHelper
         return [
             'TipoRegistro' => intval(substr($string, 0, 1)),
             'CodigoEstabelecimento' => substr($string, 1, 15),
-            'DataOperacao' => (intval(substr($string, 16, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 16, 8))->format('Y-m-d'),
-            'DataCredito' => (intval(substr($string, 24, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 24, 8))->format('Y-m-d'),
+            'DataOperacao' => self::formataData(substr($string, 16, 8)),
+            'DataCredito' => self::formataData(substr($string, 24, 8)),
             'NumeroOperacao' => intval(substr($string, 32, 15)),
             'ValorBrutoAntecipacao' => floatval(substr($string, 47, 12)) / 100,
             'ValorTaxaAntecipacao' => floatval(substr($string, 59, 12)) / 100,
@@ -277,8 +309,8 @@ class GetnetFileHelper
         return [
             'TipoRegistro' => intval(substr($string, 0, 1)),
             'CodigoEstabelecimento' => trim(substr($string, 1, 15)),
-            'DataOperacao' => (intval(substr($string, 16, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 16, 8))->format('Y-m-d'),
-            'DataCredito' => (intval(substr($string, 24, 8)) == 0) ? null : Carbon::createFromFormat('dmY', substr($string, 24, 8))->format('Y-m-d'),
+            'DataOperacao' => self::formataData(substr($string, 16, 8)),
+            'DataCredito' => self::formataData(substr($string, 24, 8)),
             'NumeroOperacao' => trim(substr($string, 32, 20)),
             'TipoOperacao' => self::tipoOperacao(substr($string, 52, 2)),
             'ValorBrutoTotalOperacao' => floatval(substr($string, 54, 12)) / 100,
